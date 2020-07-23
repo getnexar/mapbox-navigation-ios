@@ -248,7 +248,7 @@ public class CarPlayManager: NSObject {
 @available(iOS 12.0, *)
 extension CarPlayManager: CPApplicationDelegate {
 
-    public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
+    public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow?) {
 
         CarPlayManager.isConnected = true
         interfaceController.delegate = self
@@ -261,8 +261,10 @@ extension CarPlayManager: CPApplicationDelegate {
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
-        window.rootViewController = carPlayMapViewController
-        self.carWindow = window
+        if let window = window {
+            window.rootViewController = carPlayMapViewController
+            self.carWindow = window
+        }
 
         if let mapTemplate = mapTemplate(for: interfaceController) {
             mainMapTemplate = mapTemplate
@@ -272,7 +274,7 @@ extension CarPlayManager: CPApplicationDelegate {
         }
     }
 
-    public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+    public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow?) {
         CarPlayManager.isConnected = false
         self.interfaceController = nil
         carWindow?.isHidden = true
